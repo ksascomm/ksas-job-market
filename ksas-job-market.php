@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: KSAS Job Market Candidate
-Plugin URI: http://krieger2.jhu.edu/comm/web/plugins/people
-Description: The people plugin must also be activated.  This adds the metabox and widget for job market candidates.  Built originally for the Department of Economics
-Version: 1.0
+Plugin URI:  http://kriegerbeta.jhu.edu/documentation/plugins/job-market/
+Description: The people plugin must also be activated.  This adds the metabox and widget for job market candidates.  Built specifically for the Department of Economics.  Will need to modify the widget text each academic year.
+Version: 2.0
 Author: Cara Peckens
 Author URI: mailto:cpeckens@jhu.edu
 License: GPL2
@@ -53,7 +53,7 @@ $jobcandidatedetails_6_metabox = array(
 				),
 															
 				array(
-					'name' 			=> 'Research',
+					'name' 			=> 'Research/Body Content',
 					'desc' 			=> '',
 					'id' 			=> 'ecpt_job_research',
 					'class' 		=> 'ecpt_job_research',
@@ -63,49 +63,6 @@ $jobcandidatedetails_6_metabox = array(
 					'std'			=> ''													
 				),
 															
-				array(
-					'name' 			=> 'Teaching',
-					'desc' 			=> '',
-					'id' 			=> 'ecpt_job_teaching',
-					'class' 		=> 'ecpt_job_teaching',
-					'type' 			=> 'textarea',
-					'rich_editor' 	=> 1,			
-					'max' 			=> 0,
-					'std'			=> ''													
-				),
-															
-				array(
-					'name' 			=> 'References',
-					'desc' 			=> '',
-					'id' 			=> 'ecpt_references',
-					'class' 		=> 'ecpt_references',
-					'type' 			=> 'textarea',
-					'rich_editor' 	=> 1,			
-					'max' 			=> 0,
-					'std'			=> ''													
-				),
-															
-				array(
-					'name' 			=> 'Extra Tab Title',
-					'desc' 			=> '',
-					'id' 			=> 'ecpt_job_extra_tab_title',
-					'class' 		=> 'ecpt_job_extra_tab_title',
-					'type' 			=> 'text',
-					'rich_editor' 	=> 0,			
-					'max' 			=> 0,
-					'std'			=> ''													
-				),
-															
-				array(
-					'name' 			=> 'Extra Tab Content',
-					'desc' 			=> '',
-					'id' 			=> 'ecpt_job_extra_tab',
-					'class' 		=> 'ecpt_job_extra_tab',
-					'type' 			=> 'textarea',
-					'rich_editor' 	=> 1,			
-					'max' 			=> 0,
-					'std'			=> ''													
-				),
 												)
 );			
 			
@@ -231,43 +188,56 @@ class job_candidate_Widget extends WP_Widget {
 
 	function widget( $args, $instance ) {
 		extract($args);
-		$title = apply_filters('widget_title', $instance['title'], $instance, $this->id_base);
+		$title = apply_filters('widget_title', $instance['title'] );
 
 		echo $before_widget;
+
+		/* Display the widget title if one was input (before and after defined by themes). */
 		if ( $title )
-			echo $before_title . $title . $after_title;                     
-	
-
-		global $post; ?>
-		<?php $job_candidate_query = new WP_Query('post-type=people&role=job-market-candidate&orderby=rand&posts_per_page=1'); ?>
-					<?php while ($job_candidate_query->have_posts()) : $job_candidate_query->the_post(); ?>            
-    	<div class="profile_box">
-    	<div class="jobmarket"></div>
-		<a href="<?php bloginfo('url'); ?>/directoryindex/job-market/"><img src="<?php echo get_post_meta($post->ID, 'ecpt_people_photo', true); ?>" /></a>
-    	<h4><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/"><?php the_title(); ?></a></h4>
-    	<p><strong>Thesis:</strong> <?php echo get_post_meta($post->ID, 'ecpt_thesis', true); ?></p>
-    	<p><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">Click here</a> to view all of our 2011-2012 job market candidates.</p>
-    	</div>
-	
-	
+			echo $before_title . $title . $after_title;
+		$jobmarket_widget_query = new WP_Query(array(
+					'post_type' => 'people',
+					'role' => 'job-market-candidate',
+					'orderby' => 'rand',
+					'posts_per_page' => 1));
+					
+		if ( $jobmarket_widget_query->have_posts() ) :  while ($jobmarket_widget_query->have_posts()) : $jobmarket_widget_query->the_post(); global $post;?>
+				<article class="row">
+					<div class="twelve columns">
+						<a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">
+							<?php if ( has_post_thumbnail()) { the_post_thumbnail('directory', array('class' => "floatleft")); } ?>
+							<h6><?php the_title(); ?></h6>
+							<p><b>Thesis:&nbsp;</b><?php if(get_post_meta($post->ID, 'ecpt_thesis', true)) { echo get_post_meta($post->ID, 'ecpt_thesis', true); } ?></p>
+						</a>
+					</div>
+				</article>
 	<?php endwhile; ?>
-
-<?php echo $after_widget;
-
+		<article>
+			<p><b><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/" class="blue">View all of our 2013-2014 job market candidates</a></b></p>
+		</article>
+	<?php endif; ?>
+ <?php echo $after_widget;
 	}
 
 	function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'title' => '') );
-		$title = $instance['title'];
-?>
-		
-<?php
+
+		/* Set up some default widget settings. */
+		$defaults = array( 'title' => __('Job Market Candidate', 'ksas_profile'));
+		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
+
+		<!-- Widget Title: Text Input -->
+		<p>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e('Title:', 'hybrid'); ?></label>
+			<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" style="width:100%;" />
+		</p>
+
+	<?php
 	}
 
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$new_instance = wp_parse_args((array) $new_instance, array( 'title' => ''));
-		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['title'] = strip_tags( $new_instance['title'] );
 		return $instance;
 	}
 
