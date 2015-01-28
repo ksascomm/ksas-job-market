@@ -213,7 +213,7 @@ class job_candidate_Widget extends WP_Widget {
 				</article>
 	<?php endwhile; ?>
 		<article>
-			<p><b><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/" class="blue">View all of our 2013-2014 job market candidates</a></b></p>
+			<p><b><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/" class="blue">View all of our job market candidates</a></b></p>
 		</article>
 	<?php endif; ?>
  <?php echo $after_widget;
