@@ -183,7 +183,7 @@ class job_candidate_Widget extends WP_Widget {
 
 	function job_candidate_Widget() {
 		$widget_ops = array('classname' => 'widget_job_candidate', 'description' => __( "Job Candidate Profile") );
-		$this->WP_Widget('job-candidate-widget', 'Job Candidate Profile', $widget_ops);
+		parent::__construct('job-candidate-widget', 'Job Candidate Profile', $widget_ops);
 	}
 
 	function widget( $args, $instance ) {
