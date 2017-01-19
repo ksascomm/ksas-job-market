@@ -202,18 +202,16 @@ class job_candidate_Widget extends WP_Widget {
 					'posts_per_page' => 1));
 					
 		if ( $jobmarket_widget_query->have_posts() ) :  while ($jobmarket_widget_query->have_posts()) : $jobmarket_widget_query->the_post(); global $post;?>
-				<article class="row">
-					<div class="twelve columns">
-						<a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">
-							<?php if ( has_post_thumbnail()) { the_post_thumbnail('directory', array('class' => "floatleft")); } ?>
-							<h6><?php the_title(); ?></h6>
-							<p><b>Thesis:&nbsp;</b><?php if(get_post_meta($post->ID, 'ecpt_thesis', true)) { echo get_post_meta($post->ID, 'ecpt_thesis', true); } ?></p>
-						</a>
+				<article class="row" aria-labelledby="post-<?php the_ID(); ?>" >	
+					<div class="small-12 columns">
+						<?php if ( has_post_thumbnail()) { the_post_thumbnail('directory', array('class' => "floatleft")); } ?>
+						<h5><a href="<?php the_permalink(); ?>" id="post-<?php the_ID(); ?>" ><?php the_title(); ?></a></h5>
+						<p><strong>Thesis:&nbsp;</strong><?php if(get_post_meta($post->ID, 'ecpt_thesis', true)) { echo get_post_meta($post->ID, 'ecpt_thesis', true); } ?></p>
 					</div>
 				</article>
 	<?php endwhile; ?>
-		<article>
-			<p><b><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/" class="blue">View all of our job market candidates</a></b></p>
+		<article aria-label="job-market-candidate archives">
+			<p><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">View all of our job market candidates <span class="fa fa-chevron-circle-right" aria-hidden="true"></span></a></p>
 		</article>
 	<?php endif; ?>
  <?php echo $after_widget;
