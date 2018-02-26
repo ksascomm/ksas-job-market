@@ -10,7 +10,7 @@ License: GPL2
 */
 
 //Add Job Candidate Metabox
-$jobcandidatedetails_6_metabox = array( 
+$jobcandidatedetails_6_metabox = array(
 	'id' => 'jobcandidatedetails',
 	'title' => 'Job Candidate Details',
 	'page' => array('people'),
@@ -18,58 +18,58 @@ $jobcandidatedetails_6_metabox = array(
 	'priority' => 'low',
 	'fields' => array(
 
-				
+
 				array(
 					'name' 			=> 'Thesis Title',
 					'desc' 			=> '',
 					'id' 			=> 'ecpt_thesis',
 					'class' 		=> 'ecpt_thesis',
 					'type' 			=> 'text',
-					'rich_editor' 	=> 0,			
+					'rich_editor' 	=> 0,
 					'max' 			=> 0,
-					'std'			=> ''													
+					'std'			=> ''
 				),
-															
+
 				array(
 					'name' 			=> 'Fields',
 					'desc' 			=> '',
 					'id' 			=> 'ecpt_fields',
 					'class' 		=> 'ecpt_fields',
 					'type' 			=> 'text',
-					'rich_editor' 	=> 0,			
+					'rich_editor' 	=> 0,
 					'max' 			=> 0,
-					'std'			=> ''													
+					'std'			=> ''
 				),
-															
+
 				array(
 					'name' 			=> 'Main Advisor',
 					'desc' 			=> '',
 					'id' 			=> 'ecpt_advisor',
 					'class' 		=> 'ecpt_advisor',
 					'type' 			=> 'text',
-					'rich_editor' 	=> 0,			
+					'rich_editor' 	=> 0,
 					'max' 			=> 0,
-					'std'			=> ''													
+					'std'			=> ''
 				),
-															
+
 				array(
 					'name' 			=> 'Research/Body Content',
 					'desc' 			=> '',
 					'id' 			=> 'ecpt_job_research',
 					'class' 		=> 'ecpt_job_research',
 					'type' 			=> 'textarea',
-					'rich_editor' 	=> 1,			
+					'rich_editor' 	=> 1,
 					'max' 			=> 0,
-					'std'			=> ''													
+					'std'			=> ''
 				),
-															
+
 												)
-);			
-			
+);
+
 add_action('admin_menu', 'ecpt_add_jobcandidatedetails_6_meta_box');
 function ecpt_add_jobcandidatedetails_6_meta_box() {
 
-	global $jobcandidatedetails_6_metabox;		
+	global $jobcandidatedetails_6_metabox;
 
 	foreach($jobcandidatedetails_6_metabox['page'] as $page) {
 		add_meta_box($jobcandidatedetails_6_metabox['id'], $jobcandidatedetails_6_metabox['title'], 'ecpt_show_jobcandidatedetails_6_box', $page, 'normal', 'low', $jobcandidatedetails_6_metabox);
@@ -82,17 +82,17 @@ function ecpt_show_jobcandidatedetails_6_box()	{
 	global $jobcandidatedetails_6_metabox;
 	global $ecpt_prefix;
 	global $wp_version;
-	
+
 	// Use nonce for verification
 	echo '<input type="hidden" name="ecpt_jobcandidatedetails_6_meta_box_nonce" value="', wp_create_nonce(basename(__FILE__)), '" />';
-	
+
 	echo '<table class="form-table">';
 
 	foreach ($jobcandidatedetails_6_metabox['fields'] as $field) {
 		// get current post meta data
 
 		$meta = get_post_meta($post->ID, $field['id'], true);
-		
+
 		echo '<tr>',
 				'<th style="width:20%"><label for="', $field['id'], '">', $field['name'], '</label></th>',
 				'<td class="ecpt_field_type_' . str_replace(' ', '_', $field['type']) . '">';
@@ -101,7 +101,7 @@ function ecpt_show_jobcandidatedetails_6_box()	{
 				echo '<input type="text" name="', $field['id'], '" id="', $field['id'], '" value="', $meta ? $meta : $field['std'], '" size="30" style="width:97%" /><br/>', '', $field['desc'];
 				break;
 			case 'textarea':
-			
+
 				if($field['rich_editor'] == 1) {
 					if($wp_version >= 3.3) {
 						echo wp_editor($meta, $field['id'], array('textarea_name' => $field['id'], 'wpautop' => false));
@@ -115,17 +115,17 @@ function ecpt_show_jobcandidatedetails_6_box()	{
 						echo $editor . $field_html;
 					}
 				} else {
-					echo '<div style="width: 100%;"><textarea name="', $field['id'], '" class="', $field['class'], '" id="', $field['id'], '" cols="60" rows="8" style="width:97%">', $meta ? $meta : $field['std'], '</textarea></div>', '', $field['desc'];				
+					echo '<div style="width: 100%;"><textarea name="', $field['id'], '" class="', $field['class'], '" id="', $field['id'], '" cols="60" rows="8" style="width:97%">', $meta ? $meta : $field['std'], '</textarea></div>', '', $field['desc'];
 				}
-				
+
 				break;
 		}
 		echo     '<td>',
 			'</tr>';
 	}
-	
+
 	echo '</table>';
-}	
+}
 
 add_action('save_post', 'ecpt_jobcandidatedetails_6_save');
 
@@ -133,7 +133,7 @@ add_action('save_post', 'ecpt_jobcandidatedetails_6_save');
 function ecpt_jobcandidatedetails_6_save($post_id) {
 	global $post;
 	global $jobcandidatedetails_6_metabox;
-	
+
 	// verify nonce
 	if (!isset($_POST['ecpt_jobcandidatedetails_6_meta_box_nonce']) || !wp_verify_nonce($_POST['ecpt_jobcandidatedetails_6_meta_box_nonce'], basename(__FILE__))) {
 		return $post_id;
@@ -152,20 +152,20 @@ function ecpt_jobcandidatedetails_6_save($post_id) {
 	} elseif (!current_user_can('edit_post', $post_id)) {
 		return $post_id;
 	}
-	
+
 	foreach ($jobcandidatedetails_6_metabox['fields'] as $field) {
-	
+
 		$old = get_post_meta($post_id, $field['id'], true);
 		$new = $_POST[$field['id']];
-		
+
 		if ($new && $new != $old) {
 			if($field['type'] == 'date') {
 				$new = ecpt_format_date($new);
 				update_post_meta($post_id, $field['id'], $new);
 			} else {
 				update_post_meta($post_id, $field['id'], $new);
-				
-				
+
+
 			}
 		} elseif ('' == $new && $old) {
 			delete_post_meta($post_id, $field['id'], $old);
@@ -200,18 +200,18 @@ class job_candidate_Widget extends WP_Widget {
 					'role' => 'job-market-candidate',
 					'orderby' => 'rand',
 					'posts_per_page' => 1));
-					
+
 		if ( $jobmarket_widget_query->have_posts() ) :  while ($jobmarket_widget_query->have_posts()) : $jobmarket_widget_query->the_post(); global $post;?>
-				<article class="row" aria-labelledby="post-<?php the_ID(); ?>" >	
+				<article class="row" aria-labelledby="post-<?php the_ID(); ?>" >
 					<div class="small-12 columns">
-						<?php if ( has_post_thumbnail()) { the_post_thumbnail('directory', array('class' => "floatleft")); } ?>
-						<h5><a href="<?php the_permalink(); ?>" id="post-<?php the_ID(); ?>" ><?php the_title(); ?></a></h5>
+						<?php if ( has_post_thumbnail()) { the_post_thumbnail('directory', array('class' => "floatleft", 'alt' => get_the_title())); } ?>
+						<h5><a href="<?php the_permalink(); ?>" id="post-<?php the_ID(); ?>" ><?php the_title(); ?><span class="link"></span></a></h5>
 						<p><strong>Thesis:&nbsp;</strong><?php if(get_post_meta($post->ID, 'ecpt_thesis', true)) { echo get_post_meta($post->ID, 'ecpt_thesis', true); } ?></p>
 					</div>
 				</article>
 	<?php endwhile; ?>
 		<article aria-label="job-market-candidate archives">
-			<p><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">View all of our job market candidates <span class="fa fa-chevron-circle-right" aria-hidden="true"></span></a></p>
+			<p class="jmc-archive-link"><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">More job market candidates <span class="fa fa-chevron-circle-right" aria-hidden="true"></span></a></p>
 		</article>
 	<?php endif; ?>
  <?php echo $after_widget;
