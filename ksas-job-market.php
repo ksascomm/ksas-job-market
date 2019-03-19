@@ -173,22 +173,42 @@ function ecpt_jobcandidatedetails_6_save($post_id) {
 	}
 }
 
-//Add Job Candidate Widget
-add_action('widgets_init', 'ksas_register_jobcandidate_widgets');
-	function ksas_register_jobcandidate_widgets() {
-		register_widget('job_candidate_Widget');
-	}
+/*************Job Market Candidate Widget*****************/
+
 // Define job candidate widget
 class job_candidate_Widget extends WP_Widget {
 
-	function job_candidate_Widget() {
+	public function __construct() {
 		$widget_ops = array('classname' => 'widget_job_candidate', 'description' => __( "Job Candidate Profile") );
 		parent::__construct('job-candidate-widget', 'Job Candidate Profile', $widget_ops);
 	}
 
-	function widget( $args, $instance ) {
+	/* Update/Save the widget settings. */
+	public function update( $new_instance, $old_instance ) {
+		$instance = $old_instance;
+		$new_instance = wp_parse_args((array) $new_instance, array( 'title' => ''));
+		$instance['title']	= isset( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+		return $instance;
+	}
+
+	public function form( $instance ) {
+
+		/* Set up some default widget settings. */
+		$defaults = array( 'title' => __('Job Market Candidate', 'ksas_profile'));
+		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
+
+		<!-- Widget Title: Text Input -->
+		<p>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e('Title:', 'hybrid'); ?></label>
+			<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" style="width:100%;" />
+		</p>
+
+	<?php
+	}
+
+	public function widget( $args, $instance ) {
 		extract($args);
-		$title = apply_filters('widget_title', $instance['title'] );
+		$title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
 		echo $before_widget;
 
@@ -213,30 +233,13 @@ class job_candidate_Widget extends WP_Widget {
 		<article aria-label="job-market-candidate archives">
 			<p class="jmc-archive-link"><a href="<?php bloginfo('url'); ?>/directoryindex/job-market/">More job market candidates <span class="fa fa-chevron-circle-right" aria-hidden="true"></span></a></p>
 		</article>
-	<?php endif; ?>
- <?php echo $after_widget;
-	}
-
-	function form( $instance ) {
-
-		/* Set up some default widget settings. */
-		$defaults = array( 'title' => __('Job Market Candidate', 'ksas_profile'));
-		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
-
-		<!-- Widget Title: Text Input -->
-		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e('Title:', 'hybrid'); ?></label>
-			<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" style="width:100%;" />
-		</p>
-
-	<?php
-	}
-
-	function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$new_instance = wp_parse_args((array) $new_instance, array( 'title' => ''));
-		$instance['title'] = strip_tags( $new_instance['title'] );
-		return $instance;
+	<?php endif; echo $after_widget;
 	}
 
 }
+
+//Add Job Candidate Widget
+add_action('widgets_init', 'ksas_register_jobcandidate_widgets');
+	function ksas_register_jobcandidate_widgets() {
+		register_widget('job_candidate_Widget');
+	}
