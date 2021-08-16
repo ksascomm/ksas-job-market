@@ -1,6 +1,6 @@
 plugin_job_market - aka Graduate Student add-on
 =================
-**Current Version: ** 2.0
+**Current Version: ** 3.0
 
 This adds the metabox and widget for graduate students/job market candidates.  Originally built specifically for the Department of Economics. The people plugin must also be activated.  Will need to modify the widget text each academic year.
 
