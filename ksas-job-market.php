@@ -229,7 +229,7 @@ class Job_Candidate_Widget extends WP_Widget {
 				</article>
 				<?php endwhile; ?>
 		<article aria-label="job-market-candidate archives">
-			<p class="jmc-archive-link"><a href="<?php bloginfo( 'url' ); ?>/directoryindex/job-market/">More job market candidates <span class="fa fa-chevron-circle-right" aria-hidden="true"></span></a></p>
+			<p class="jmc-archive-link"><a href="<?php bloginfo( 'url' ); ?>/people/job-market/">More job market candidates <span class="fa fa-chevron-circle-right" aria-hidden="true"></span></a></p>
 		</article>
 			<?php
 	endif;
