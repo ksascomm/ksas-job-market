@@ -87,7 +87,8 @@ if ( ! class_exists( 'KSAS_Job_Candidate_Widget' ) ) {
 			if ( $job_query->have_posts() ) :
 				while ( $job_query->have_posts() ) :
 					$job_query->the_post();
-					$thesis = get_post_meta( get_the_ID(), 'ecpt_thesis', true );
+					$thesis  = get_post_meta( get_the_ID(), 'ecpt_thesis', true );
+					$website = get_post_meta( get_the_ID(), 'ecpt_website', true );
 					?>
 					<article>
 						<?php if ( has_post_thumbnail() ) : ?>
@@ -105,9 +106,16 @@ if ( ! class_exists( 'KSAS_Job_Candidate_Widget' ) ) {
 						<?php endif; ?>
 						
 						<h3>
+							<?php if ( $website ) : ?>
+								<a href="<?php echo esc_url( $website ); ?>" title="<?php the_title(); ?>'s website" target="_blank">
+									<?php the_title(); ?>
+									<span class="fa-light fa-square-up-right" aria-hidden="true"></span>
+								</a>
+							<?php else : ?>
 							<a href="<?php the_permalink(); ?>">
 								<?php the_title(); ?>
 							</a>
+							<?php endif; ?>
 						</h3>
 
 						<?php if ( $thesis ) : ?>
